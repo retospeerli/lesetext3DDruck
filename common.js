@@ -32,8 +32,7 @@ function renderSectionApp(cfg){
   $("subtitle").textContent = cfg.subtitle;
 
   // Match render
-  const matchCard = $("matchCard");
-  matchCard.querySelector("h2").textContent = cfg.match.title;
+  $("matchTitle").textContent = cfg.match.title;
   const matchTable = $("matchTable");
   matchTable.innerHTML = "";
   const savedMatch = state.answers.match || Array(cfg.match.left.length).fill("");
@@ -52,6 +51,7 @@ function renderSectionApp(cfg){
       state.answers.match = state.answers.match || Array(cfg.match.left.length).fill("");
       state.answers.match[i] = sel.value;
       saveState(cfg.sectionId, state);
+      updateStatus(cfg, state);
     };
     td2.appendChild(sel);
     tr.appendChild(td1); tr.appendChild(td2);
@@ -75,6 +75,7 @@ function renderSectionApp(cfg){
     inp.onchange = ()=>{
       state.answers.mc = idx;
       saveState(cfg.sectionId, state);
+      updateStatus(cfg, state);
     };
     lab.appendChild(inp);
     lab.appendChild(document.createTextNode(opt));
@@ -85,20 +86,22 @@ function renderSectionApp(cfg){
   $("clozeTitle").textContent = cfg.cloze.title;
   const p = $("clozeText");
   p.innerHTML = "";
-  const savedCloze = state.answers.cloze || Array(cfg.cloze.solution.length).fill("");
+  const blanks = cfg.cloze.solution.length;
+  const savedCloze = state.answers.cloze || Array(blanks).fill("");
 
   let bi = 0;
   cfg.cloze.textParts.forEach((part,pi)=>{
     p.appendChild(document.createTextNode(part));
-    if(pi < cfg.cloze.solution.length){
+    if(pi < blanks){
       const sel = document.createElement("select");
       sel.innerHTML = `<option value="">– Wort –</option>` +
         cfg.cloze.wordbank.map(w=>`<option value="${w}">${w}</option>`).join("");
       sel.value = savedCloze[bi] ?? "";
       sel.onchange = ()=>{
-        state.answers.cloze = state.answers.cloze || Array(cfg.cloze.solution.length).fill("");
+        state.answers.cloze = state.answers.cloze || Array(blanks).fill("");
         state.answers.cloze[bi] = sel.value;
         saveState(cfg.sectionId, state);
+        updateStatus(cfg, state);
       };
       p.appendChild(sel);
       bi++;
@@ -113,9 +116,6 @@ function renderSectionApp(cfg){
     c.textContent = w;
     wb.appendChild(c);
   });
-
-  // Status
-  updateStatus(cfg, state);
 
   // Buttons
   $("checkBtn").onclick = ()=>{
@@ -133,6 +133,9 @@ function renderSectionApp(cfg){
     localStorage.removeItem(storageKey(cfg.sectionId));
     location.reload();
   };
+
+  // Status initial
+  updateStatus(cfg, state);
 }
 
 function checkAll(cfg, state){
@@ -159,3 +162,5 @@ function updateStatus(cfg, state){
     ? `<span class="ok">Gelöst ✅</span> – AppSolved wird gesendet.`
     : `<span class="bad">Noch nicht gelöst ❌</span> – bitte alles korrekt lösen.`;
 }
+
+window.renderSectionApp = renderSectionApp;
