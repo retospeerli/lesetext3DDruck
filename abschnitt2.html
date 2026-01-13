@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>3D-Druck – Abschnitt 2</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+
+    <div class="pillbar">
+      <div class="pill" id="progressPill"></div>
+      <div class="pill" id="detailPill"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="matchTitle"></h2>
+      <table id="matchTable"></table>
+      <div class="hint">Jede Definition passt genau einmal. Wähle zu jedem Begriff die passende Erklärung.</div>
+    </div>
+
+    <div class="card">
+      <h2 id="mcTitle"></h2>
+      <div class="small" id="mcQuestion"></div>
+      <div class="mc" id="mcWrap"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="clozeTitle"></h2>
+      <p class="small" id="clozeText"></p>
+      <div class="wordbank" id="wordbank"></div>
+      <div class="hint">Wortbank: genau ein Wort passt pro Lücke. Ein Wort passt sicher nicht.</div>
+    </div>
+
+    <div class="card">
+      <div class="small" id="msg"></div>
+      <div class="footer">
+        <button class="secondary" id="resetBtn">Zurücksetzen</button>
+        <button id="checkBtn">Abschnitt prüfen</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.SECTION_CONFIG = {
+      sectionId: 2,
+      title: "Abschnitt 2: 3D-Druck in der heutigen Welt",
+      subtitle: "Industrie, Medizin, Luftfahrt, Bauwesen und Alltag – wozu 3D-Druck heute genutzt wird.",
+      match: {
+        title: "Begriffe und Definitionen",
+        left: ["Prototyp","Medizinischer 3D-Druck","Luftfahrt","Bauwesen"],
+        right: [
+          "Erstes Testmodell: prüfen und verbessern",
+          "Individuelle Hilfsmittel: passend zum Körper",
+          "Leichte, stabile Bauteile: für Flugzeuge und Raketen",
+          "Wände und Gebäude: Bau mit Beton und Technik"
+        ],
+        solution: [0,1,2,3]
+      },
+      mc: {
+        title: "Multiple Choice",
+        question: "Warum nutzen Firmen 3D-Druck für Prototypen?",
+        options: [
+          "Weil Entwürfe ohne Tests verkauft werden.",
+          "Weil Ideen schnell geprüft und verbessert werden.",
+          "Weil Modelle immer sofort perfekt sind.",
+          "Weil Produktion ohne Planung beginnt."
+        ],
+        correctIndex: 1
+      },
+      cloze: {
+        title: "Lückentext",
+        // 5 Lücken => 6 Textteile
+        textParts: [
+          "Firmen nutzen 3D-Druck, um neue ",
+          " schnell zu testen. In der ",
+          " werden Prothesen und Hilfsmittel angepasst. In der ",
+          " müssen Teile leicht und stabil sein. Im ",
+          " werden Wände Schicht für Schicht gebaut. So lassen sich ",
+          " schneller verbessern."
+        ],
+        wordbank: ["Ideen","Medizin","Luftfahrt","Bauwesen","Produkte","Farben"],
+        solution: ["Ideen","Medizin","Luftfahrt","Bauwesen","Produkte"]
+      }
+    };
+  </script>
+  <script src="./common.js"></script>
+  <script>renderSectionApp(window.SECTION_CONFIG);</script>
+</body>
+</html>
