@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>3D-Druck – Arbeitsblatt (LearningView)</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f3f4f6;}
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:14px;}
+    .app{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);padding:18px;max-width:980px;width:100%;box-sizing:border-box;}
+    h1{margin:0 0 6px;text-align:center;font-size:1.4rem;}
+    .topbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:8px 0 14px;}
+    .pill{background:#eef2ff;border:1px solid #c7d2fe;padding:6px 10px;border-radius:999px;font-size:.92rem}
+    .tabs{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0 14px;}
+    .tab{border:1px solid #e5e7eb;background:#fff;border-radius:999px;padding:8px 12px;cursor:pointer;font-weight:600}
+    .tab.active{background:#111827;color:#fff;border-color:#111827}
+    .section{display:none;}
+    .section.active{display:block;}
+    .card{border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin:10px 0;background:#fff;}
+    .card h2{margin:0 0 8px;font-size:1.05rem}
+    .hint{color:#6b7280;font-size:.92rem;margin-top:6px}
+    .row{display:flex;gap:10px;flex-wrap:wrap;align-items:flex-start}
+    .col{flex:1;min-width:260px}
+    button{border:0;background:#111827;color:#fff;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:700}
+    button.secondary{background:#e5e7eb;color:#111827}
+    button:disabled{opacity:.45;cursor:not-allowed}
+    .ok{color:#065f46;font-weight:700}
+    .bad{color:#991b1b;font-weight:700}
+    .small{font-size:.92rem;color:#374151}
+    .mc label{display:block;border:1px solid #e5e7eb;border-radius:12px;padding:10px;margin:8px 0;cursor:pointer}
+    .mc input{margin-right:8px}
+    .wordbank{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{background:#f3f4f6;border:1px solid #e5e7eb;padding:6px 10px;border-radius:999px;font-size:.92rem}
+    .blank{display:inline-block;min-width:140px;border-bottom:2px solid #111827;padding:0 6px;margin:0 4px}
+    select{padding:6px;border-radius:10px;border:1px solid #d1d5db}
+    table{width:100%;border-collapse:separate;border-spacing:0 8px}
+    td{padding:8px 10px;vertical-align:middle}
+    .pair td{border:1px solid #e5e7eb}
+    .pair td:first-child{border-right:none;border-radius:10px 0 0 10px;background:#fafafa;font-weight:700}
+    .pair td:last-child{border-left:none;border-radius:0 10px 10px 0}
+    .footer{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
+  </style>
+</head>
+<body>
+  <div class="app">
+    <h1>3D-Druck – Textverständnis (LearningView)</h1>
+    <div class="topbar">
+      <div class="pill" id="progressPill">Abschnitte gelöst: 0 / 5</div>
+      <div class="pill" id="statusPill">Status: offen</div>
+    </div>
+
+    <div class="tabs" id="tabs"></div>
+
+    <div id="sections"></div>
+
+    <div class="footer">
+      <button class="secondary" id="resetBtn">Alles zurücksetzen</button>
+      <button id="checkAllBtn">Alles prüfen</button>
+    </div>
+
+    <p class="hint">Hinweis: „Gelöst“ bedeutet: In einem Abschnitt sind Zuordnung, MC und Lückentext korrekt.</p>
+  </div>
+
+<script>
+/* =========================
+   DATEN: Abschnitte 1–5
+   (Abschnitt 1 vollständig,
+    2–5 als Platzhalter: fülle
+    die Aufgaben analog)
+   ========================= */
+
+const DATA = [
+  {
+    id: 1,
+    title: "Abschnitt 1",
+    subtitle: "Was ist 3D-Druck?",
+    match: {
+      title: "Begriffe zuordnen",
+      left: [
+        "3D",
+        "Additive Fertigung",
+        "3D-Modell",
+        "3D-Drucker"
+      ],
+      right: [
+        "Dreidimensional: Länge, Breite, Höhe",
+        "Herstellung: Material wird hinzugefügt",
+        "Digitaler Bauplan für den Druck",
+        "Maschine: baut Schicht für Schicht"
+      ],
+      // richtige Zuordnung: index links -> index rechts
+      solution: [0,1,2,3]
+    },
+    mc: {
+      title: "Multiple Choice",
+      question: "Was beschreibt 3D-Druck korrekt?",
+      options: [
+        "Ein Objekt wird aus einem Block herausgeschnitten.",
+        "Ein Objekt wird aus Materialresten zusammengesetzt.",
+        "Ein Objekt wird Schicht für Schicht aufgebaut.",
+        "Ein Objekt wird in einem Schritt hergestellt."
+      ],
+      correctIndex: 2
+    },
+    cloze: {
+      title: "Lückentext",
+      textParts: [
+        "Beim 3D-Druck entsteht ein Objekt nicht durch das ",
+        ", sondern durch das ",
+        ". Der Gegenstand wächst dabei ",
+        " von unten nach oben. Diese Art der Herstellung nennt man ",
+        " Fertigung. Damit der Drucker weiss, was er tun soll, braucht er eine ",
+        " Bauanleitung aus dem Computer. Das wichtigste Element des gesamten Prozesses ist das ",
+        " Modell."
+      ],
+      // 6 Lücken
+      blanks: 6,
+      wordbank: [
+        "Entfernen",
+        "Hinzufügen",
+        "schrittweise",
+        "additive",
+        "digitale",
+        "digitale",
+        "Laser" // Ablenkwort
+      ],
+      // eindeutige Lösung je Lücke
+      solution: ["Entfernen","Hinzufügen","schrittweise","additive","digitale","digitale"]
+    }
+  },
+
+  // ===== Platzhalter: Abschnitt 2–5
+  // Du kannst die Inhalte 1:1 aus deinem Arbeitsblatt übertragen.
+  // Ich habe sie hier bewusst leer gelassen, damit du sie schnell kopierst.
+  { id: 2, title: "Abschnitt 2", subtitle:"3D-Druck in der heutigen Welt",
+    match:null, mc:null, cloze:null },
+  { id: 3, title: "Abschnitt 3", subtitle:"Verfahren und Materialien",
+    match:null, mc:null, cloze:null },
+  { id: 4, title: "Abschnitt 4", subtitle:"Software: CAD & Slicer",
+    match:null, mc:null, cloze:null },
+  { id: 5, title: "Abschnitt 5", subtitle:"Du lernst 3D-Druck – warum?",
+    match:null, mc:null, cloze:null }
+];
+
+/* =========================
+   UI Rendering
+   ========================= */
+
+const tabsEl = document.getElementById("tabs");
+const sectionsEl = document.getElementById("sections");
+const progressPill = document.getElementById("progressPill");
+const statusPill = document.getElementById("statusPill");
+const resetBtn = document.getElementById("resetBtn");
+const checkAllBtn = document.getElementById("checkAllBtn");
+
+const state = loadState();
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem("lv_3ddruck_state_v1");
+    if(raw) return JSON.parse(raw);
+  }catch(e){}
+  return { active:1, solved:{}, answers:{} };
+}
+function saveState(){
+  localStorage.setItem("lv_3ddruck_state_v1", JSON.stringify(state));
+}
+
+function setActive(id){
+  state.active = id;
+  saveState();
+  render();
+}
+
+function render(){
+  // Tabs
+  tabsEl.innerHTML = "";
+  DATA.forEach(s=>{
+    const b = document.createElement("button");
+    b.className = "tab"+(s.id===state.active?" active":"");
+    b.textContent = s.title;
+    b.onclick = ()=>setActive(s.id);
+    tabsEl.appendChild(b);
+  });
+
+  // Sections
+  sectionsEl.innerHTML = "";
+  DATA.forEach(s=>{
+    const wrap = document.createElement("div");
+    wrap.className = "section"+(s.id===state.active?" active":"");
+    wrap.dataset.sid = s.id;
+
+    const header = document.createElement("div");
+    header.className = "card";
+    header.innerHTML = `<h2>${s.title}: ${s.subtitle}</h2>
+                        <div class="small">Bearbeite Zuordnung, MC und Lückentext. Dann „prüfen“.</div>`;
+    wrap.appendChild(header);
+
+    if(!s.match || !s.mc || !s.cloze){
+      const c = document.createElement("div");
+      c.className = "card";
+      c.innerHTML = `<h2>Inhalt fehlt</h2>
+                     <div class="small">Dieser Abschnitt ist noch nicht befüllt. Kopiere die Aufgaben aus deinem Dokument in die DATA-Struktur.</div>`;
+      wrap.appendChild(c);
+      sectionsEl.appendChild(wrap);
+      return;
+    }
+
+    // Match
+    wrap.appendChild(renderMatch(s));
+    // MC
+    wrap.appendChild(renderMC(s));
+    // Cloze
+    wrap.appendChild(renderCloze(s));
+
+    // Check button
+    const footer = document.createElement("div");
+    footer.className = "card";
+    footer.innerHTML = `<div class="row" style="justify-content:space-between;align-items:center">
+        <div id="secmsg_${s.id}" class="small"></div>
+        <button onclick="checkSection(${s.id})">Abschnitt prüfen</button>
+      </div>`;
+    wrap.appendChild(footer);
+
+    sectionsEl.appendChild(wrap);
+  });
+
+  // Progress
+  const solvedCount = Object.values(state.solved).filter(Boolean).length;
+  progressPill.textContent = `Abschnitte gelöst: ${solvedCount} / 5`;
+  statusPill.textContent = solvedCount===5 ? "Status: abgeschlossen" : "Status: offen";
+
+  if(solvedCount===5){
+    sendAppSolvedOnce();
+  }
+}
+window.checkSection = checkSection;
+
+function key(sid, part){ return `${sid}:${part}`; }
+
+function renderMatch(s){
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `<h2>${s.match.title}</h2>`;
+  const table = document.createElement("table");
+  s.match.left.forEach((l,i)=>{
+    const tr = document.createElement("tr");
+    tr.className = "pair";
+    const td1 = document.createElement("td"); td1.textContent = l;
+    const td2 = document.createElement("td");
+    const sel = document.createElement("select");
+    sel.dataset.sid = s.id; sel.dataset.part="match"; sel.dataset.idx=i;
+    sel.innerHTML = `<option value="">– wählen –</option>` + s.match.right.map((r,ri)=>`<option value="${ri}">${r}</option>`).join("");
+    const saved = state.answers[key(s.id,"match")]?.[i] ?? "";
+    sel.value = saved;
+    sel.onchange = ()=>{
+      state.answers[key(s.id,"match")] = state.answers[key(s.id,"match")] || [];
+      state.answers[key(s.id,"match")][i] = sel.value;
+      saveState();
+    };
+    td2.appendChild(sel);
+    tr.appendChild(td1); tr.appendChild(td2);
+    table.appendChild(tr);
+  });
+  card.appendChild(table);
+  card.innerHTML += `<div class="hint">Tipp: Jede Definition passt genau zu einem Begriff.</div>`;
+  return card;
+}
+
+function renderMC(s){
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `<h2>${s.mc.title}</h2><div class="small">${s.mc.question}</div>`;
+  const div = document.createElement("div");
+  div.className = "mc";
+  const saved = state.answers[key(s.id,"mc")] ?? null;
+  s.mc.options.forEach((opt,idx)=>{
+    const lab = document.createElement("label");
+    const inp = document.createElement("input");
+    inp.type="radio"; inp.name=`mc_${s.id}`; inp.value=idx;
+    if(saved!==null && String(saved)===String(idx)) inp.checked = true;
+    inp.onchange = ()=>{
+      state.answers[key(s.id,"mc")] = idx;
+      saveState();
+    };
+    lab.appendChild(inp);
+    lab.appendChild(document.createTextNode(opt));
+    div.appendChild(lab);
+  });
+  card.appendChild(div);
+  return card;
+}
+
+function renderCloze(s){
+  const card = document.createElement("div");
+  card.className = "card";
+  card.innerHTML = `<h2>${s.cloze.title}</h2>`;
+  const p = document.createElement("p");
+  p.className = "small";
+
+  const saved = state.answers[key(s.id,"cloze")] || Array(s.cloze.blanks).fill("");
+
+  // Build with selects for each blank
+  let bi = 0;
+  s.cloze.textParts.forEach((part,pi)=>{
+    p.appendChild(document.createTextNode(part));
+    if(pi < s.cloze.blanks){
+      const sel = document.createElement("select");
+      sel.dataset.sid=s.id; sel.dataset.part="cloze"; sel.dataset.idx=bi;
+      sel.innerHTML = `<option value="">– Wort –</option>` + s.cloze.wordbank.map(w=>`<option value="${w}">${w}</option>`).join("");
+      sel.value = saved[bi] || "";
+      sel.onchange = ()=>{
+        state.answers[key(s.id,"cloze")] = state.answers[key(s.id,"cloze")] || Array(s.cloze.blanks).fill("");
+        state.answers[key(s.id,"cloze")][bi] = sel.value;
+        saveState();
+      };
+      p.appendChild(sel);
+      bi++;
+    }
+  });
+
+  card.appendChild(p);
+
+  const wb = document.createElement("div");
+  wb.className = "wordbank";
+  s.cloze.wordbank.forEach(w=>{
+    const c = document.createElement("span");
+    c.className = "chip";
+    c.textContent = w;
+    wb.appendChild(c);
+  });
+  card.appendChild(wb);
+  card.innerHTML += `<div class="hint">Wortbank: genau ein Wort pro Lücke. Ein Wort passt sicher nicht.</div>`;
+  return card;
+}
+
+function checkSection(sid){
+  const s = DATA.find(x=>x.id===sid);
+  if(!s.match || !s.mc || !s.cloze) return;
+
+  const msg = document.getElementById(`secmsg_${sid}`);
+  let okMatch = false, okMC = false, okCloze = false;
+
+  // Match
+  const ansM = state.answers[key(sid,"match")] || [];
+  okMatch = ansM.length===s.match.left.length && s.match.solution.every((sol,i)=>String(ansM[i])===String(sol));
+
+  // MC
+  const ansMC = state.answers[key(sid,"mc")];
+  okMC = (ansMC===s.mc.correctIndex);
+
+  // Cloze
+  const ansC = state.answers[key(sid,"cloze")] || [];
+  okCloze = s.cloze.solution.every((sol,i)=>String(ansC[i])===String(sol));
+
+  const solved = okMatch && okMC && okCloze;
+  state.solved[sid] = solved;
+  saveState();
+
+  msg.innerHTML = solved
+    ? `<span class="ok">Gelöst ✅</span> (Zuordnung, MC und Lückentext korrekt)`
+    : `<span class="bad">Noch nicht gelöst ❌</span> (prüfe die drei Teile)`;
+
+  render();
+}
+
+function sendAppSolvedOnce(){
+  if(state._sentSolved) return;
+  state._sentSolved = true;
+  saveState();
+  try{
+    window.parent?.postMessage("AppSolved","*");
+  }catch(e){}
+}
+
+checkAllBtn.onclick = ()=>{
+  DATA.forEach(s=>checkSection(s.id));
+};
+
+resetBtn.onclick = ()=>{
+  localStorage.removeItem("lv_3ddruck_state_v1");
+  location.reload();
+};
+
+render();
+</script>
+</body>
+</html>
