@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>3D-Druck – Abschnitt 4</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+
+    <div class="pillbar">
+      <div class="pill" id="progressPill"></div>
+      <div class="pill" id="detailPill"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="matchTitle"></h2>
+      <table id="matchTable"></table>
+      <div class="hint">Zuordnung: Begriff → klare Definition. (Kurz und eindeutig.)</div>
+    </div>
+
+    <div class="card">
+      <h2 id="mcTitle"></h2>
+      <div class="small" id="mcQuestion"></div>
+      <div class="mc" id="mcWrap"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="clozeTitle"></h2>
+      <p class="small" id="clozeText"></p>
+      <div class="wordbank" id="wordbank"></div>
+      <div class="hint">Wortbank: genau ein Wort passt pro Lücke. Ein Wort passt sicher nicht.</div>
+    </div>
+
+    <div class="card">
+      <div class="small" id="msg"></div>
+      <div class="footer">
+        <button class="secondary" id="resetBtn">Zurücksetzen</button>
+        <button id="checkBtn">Abschnitt prüfen</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.SECTION_CONFIG = {
+      sectionId: 4,
+      title: "Abschnitt 4: Software – CAD und Slicer",
+      subtitle: "TinkerCAD für das Modell, Cura als Slicer – vom Entwurf zum Druckcode.",
+      match: {
+        title: "Begriffe und Definitionen",
+        left: ["CAD","TinkerCAD","Slicer","Cura"],
+        right: [
+          "CAD = Computer Aided Design – 3D-Modelle am Computer konstruieren",
+          "TinkerCAD = CAD-Tool – einfacher Einstieg mit Grundformen",
+          "Slicer = Slice-Software – Modell in Schichten und Druckwege umrechnen",
+          "Cura = Slicer-Programm – erstellt Druckdaten für FDM-Drucker"
+        ],
+        solution: [0,1,2,3]
+      },
+      mc: {
+        title: "Multiple Choice",
+        question: "Warum braucht ein 3D-Drucker eine Slicer-Software?",
+        options: [
+          "Damit das Filament farbig wird.",
+          "Damit das Modell in Schichten zerlegt wird.",
+          "Damit der Drucker ohne Strom läuft.",
+          "Damit das Objekt sofort fertig ist."
+        ],
+        correctIndex: 1
+      },
+      cloze: {
+        title: "Lückentext",
+        // 5 Lücken => 6 Textteile
+        textParts: [
+          "Zuerst entsteht ein ",
+          " im CAD-Programm. CAD bedeutet ",
+          " Aided Design. Für Einsteiger eignet sich ",
+          ". Damit der Drucker drucken kann, braucht es einen ",
+          ". Programme wie ",
+          " berechnen die Schichten."
+        ],
+        wordbank: ["3D-Modell","Computer","TinkerCAD","Slicer","Cura","Filament"],
+        solution: ["3D-Modell","Computer","TinkerCAD","Slicer","Cura"]
+      }
+    };
+  </script>
+  <script src="./common.js"></script>
+  <script>renderSectionApp(window.SECTION_CONFIG);</script>
+</body>
+</html>
