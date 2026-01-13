@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>3D-Druck – Abschnitt 3</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+
+    <div class="pillbar">
+      <div class="pill" id="progressPill"></div>
+      <div class="pill" id="detailPill"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="matchTitle"></h2>
+      <table id="matchTable"></table>
+      <div class="hint">Zuordnung: Abkürzung → ausgeschrieben → kurze Erklärung.</div>
+    </div>
+
+    <div class="card">
+      <h2 id="mcTitle"></h2>
+      <div class="small" id="mcQuestion"></div>
+      <div class="mc" id="mcWrap"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="clozeTitle"></h2>
+      <p class="small" id="clozeText"></p>
+      <div class="wordbank" id="wordbank"></div>
+      <div class="hint">Wortbank: genau ein Wort passt pro Lücke. Ein Wort passt sicher nicht.</div>
+    </div>
+
+    <div class="card">
+      <div class="small" id="msg"></div>
+      <div class="footer">
+        <button class="secondary" id="resetBtn">Zurücksetzen</button>
+        <button id="checkBtn">Abschnitt prüfen</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.SECTION_CONFIG = {
+      sectionId: 3,
+      title: "Abschnitt 3: Verfahren und Materialien",
+      subtitle: "FDM, SLA, Lasersintern und Metall – wie und womit gedruckt wird.",
+      match: {
+        title: "Abkürzung – Bedeutung – Kurz-Erklärung",
+        left: ["FDM","SLA","SLS","PLA"],
+        right: [
+          "FDM = Fused Deposition Modeling – Filament wird geschmolzen und abgelegt",
+          "SLA = Stereolithografie – Flüssiges Harz wird mit Licht gehärtet",
+          "SLS = Selective Laser Sintering – Pulver wird mit Laser verschmolzen",
+          "PLA = Polylactid – pflanzlicher Kunststoff, gut für Schule"
+        ],
+        solution: [0,1,2,3]
+      },
+      mc: {
+        title: "Multiple Choice",
+        question: "Warum gibt es keinen Metall-3D-Drucker in der Schule?",
+        options: [
+          "Weil Metallteile immer zu weich sind.",
+          "Weil Kosten und Sicherheitsrisiken zu hoch sind.",
+          "Weil Metall nur im Wasser gedruckt wird.",
+          "Weil Metall ohne Computer gedruckt wird."
+        ],
+        correctIndex: 1
+      },
+      cloze: {
+        title: "Lückentext",
+        // 5 Lücken => 6 Textteile
+        textParts: [
+          "Beim ",
+          "-Druck wird Filament erhitzt und durch eine Düse gepresst. Beim ",
+          "-Druck wird flüssiges Material mit Licht gehärtet. Beim ",
+          " wird Pulver mit einem Laser verschmolzen. Für sehr stabile Teile nutzt man oft ",
+          ". Welches Material passt, hängt vom ",
+          " ab."
+        ],
+        wordbank: ["FDM","SLA","Lasersintern","Metall","Einsatz","Farbe"],
+        solution: ["FDM","SLA","Lasersintern","Metall","Einsatz"]
+      }
+    };
+  </script>
+  <script src="./common.js"></script>
+  <script>renderSectionApp(window.SECTION_CONFIG);</script>
+</body>
+</html>
