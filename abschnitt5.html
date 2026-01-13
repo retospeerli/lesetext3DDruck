@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>3D-Druck – Abschnitt 5</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app">
+    <h1 id="title"></h1>
+    <p class="sub" id="subtitle"></p>
+
+    <div class="pillbar">
+      <div class="pill" id="progressPill"></div>
+      <div class="pill" id="detailPill"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="matchTitle"></h2>
+      <table id="matchTable"></table>
+      <div class="hint">Jede Definition passt genau einmal. Wähle zu jedem Begriff die passende Erklärung.</div>
+    </div>
+
+    <div class="card">
+      <h2 id="mcTitle"></h2>
+      <div class="small" id="mcQuestion"></div>
+      <div class="mc" id="mcWrap"></div>
+    </div>
+
+    <div class="card">
+      <h2 id="clozeTitle"></h2>
+      <p class="small" id="clozeText"></p>
+      <div class="wordbank" id="wordbank"></div>
+      <div class="hint">Wortbank: genau ein Wort passt pro Lücke. Ein Wort passt sicher nicht.</div>
+    </div>
+
+    <div class="card">
+      <div class="small" id="msg"></div>
+      <div class="footer">
+        <button class="secondary" id="resetBtn">Zurücksetzen</button>
+        <button id="checkBtn">Abschnitt prüfen</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    window.SECTION_CONFIG = {
+      sectionId: 5,
+      title: "Abschnitt 5: Du lernst 3D-Druck – warum?",
+      subtitle: "Planen, testen, verbessern: aus deiner Idee wird ein echtes Objekt.",
+      match: {
+        title: "Begriffe und Definitionen",
+        left: ["Problemlösen","Digital denken","Verbessern","Gestalten"],
+        right: [
+          "Fehler erkennen und gezielt beheben",
+          "Computer, Software und Maschine verstehen",
+          "Modell anpassen und neu drucken",
+          "Eigene Ideen in Formen umsetzen"
+        ],
+        solution: [0,1,2,3]
+      },
+      mc: {
+        title: "Multiple Choice",
+        question: "Was zeigt dir 3D-Druck besonders deutlich?",
+        options: [
+          "Dass Technik nur für Erwachsene ist.",
+          "Dass Fehler immer vermieden werden müssen.",
+          "Dass aus Ideen echte Objekte entstehen können.",
+          "Dass Maschinen selbst entscheiden sollen."
+        ],
+        correctIndex: 2
+      },
+      cloze: {
+        title: "Lückentext",
+        // 5 Lücken => 6 Textteile
+        textParts: [
+          "Beim 3D-Druck lernst du, ",
+          " zu entwickeln und umzusetzen. Wenn etwas nicht klappt, kannst du dein Modell ",
+          ". Fehler helfen dir, bessere ",
+          " zu finden. Du verstehst, wie ",
+          ", Software und Maschine zusammenarbeiten. Das ist wichtig für viele ",
+          " der Zukunft."
+        ],
+        wordbank: ["Ideen","verbessern","Lösungen","Computer","Berufe","Farben"],
+        solution: ["Ideen","verbessern","Lösungen","Computer","Berufe"]
+      }
+    };
+  </script>
+  <script src="./common.js"></script>
+  <script>renderSectionApp(window.SECTION_CONFIG);</script>
+</body>
+</html>
