@@ -5,104 +5,47 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>3D-Druck – Abschnitt 1</title>
   <style>
-    :root{
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background:#f3f4f6;
-    }
-    body{
-      margin:0; min-height:100vh;
-      display:flex; align-items:center; justify-content:center;
-      padding:14px;
-    }
-    .app{
-      background:#fff; border-radius:16px;
-      box-shadow:0 10px 30px rgba(0,0,0,.1);
-      padding:18px; max-width:980px; width:100%;
-      box-sizing:border-box;
-    }
-    h1{margin:0 0 6px; text-align:center; font-size:1.35rem;}
-    .sub{margin:0 0 14px; text-align:center; color:#6b7280; font-size:.95rem;}
-    .pillbar{
-      display:flex; gap:10px; flex-wrap:wrap;
-      align-items:center; justify-content:space-between;
-      margin:8px 0 14px;
-    }
-    .pill{
-      background:#eef2ff; border:1px solid #c7d2fe;
-      padding:6px 10px; border-radius:999px; font-size:.92rem;
-    }
-    .card{
-      border:1px solid #e5e7eb; border-radius:14px;
-      padding:14px; margin:10px 0; background:#fff;
-    }
-    .card h2{margin:0 0 8px; font-size:1.05rem}
-    .small{font-size:.94rem; color:#374151; line-height:1.35}
-    .hint{color:#6b7280; font-size:.92rem; margin-top:8px}
+    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f3f4f6;}
+    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:14px;}
+    .app{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);padding:18px;max-width:980px;width:100%;box-sizing:border-box;}
+    h1{margin:0 0 6px;text-align:center;font-size:1.35rem;}
+    .sub{margin:0 0 14px;text-align:center;color:#6b7280;font-size:.95rem}
 
-    table{width:100%; border-collapse:separate; border-spacing:0 10px}
-    th,td{padding:8px 10px; vertical-align:middle}
-    th{font-size:.9rem; color:#6b7280; text-align:left}
+    .pillbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:8px 0 14px;}
+    .pill{background:#eef2ff;border:1px solid #c7d2fe;padding:6px 10px;border-radius:999px;font-size:.92rem}
+
+    .card{border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin:10px 0;background:#fff;}
+    .card h2{margin:0 0 8px;font-size:1.05rem}
+    .small{font-size:.94rem;color:#374151;line-height:1.35}
+    .hint{color:#6b7280;font-size:.92rem;margin-top:8px}
+
+    table{width:100%;border-collapse:separate;border-spacing:0 10px}
+    th,td{padding:8px 10px;vertical-align:middle}
+    th{font-size:.9rem;color:#6b7280;text-align:left}
     tr.row td{border:1px solid #e5e7eb}
-    tr.row td:first-child{
-      border-right:none; border-radius:10px 0 0 10px;
-      background:#fafafa; font-weight:800; width:22%;
-    }
-    tr.row td:nth-child(2){border-left:none; border-right:none; width:28%}
-    tr.row td:last-child{
-      border-left:none; border-radius:0 10px 10px 0; width:50%;
-    }
+    tr.row td:first-child{border-right:none;border-radius:10px 0 0 10px;background:#fafafa;font-weight:800;width:22%}
+    tr.row td:nth-child(2){border-left:none;border-right:none;width:28%}
+    tr.row td:last-child{border-left:none;border-radius:0 10px 10px 0;width:50%}
 
-    select{
-      padding:6px 10px; border-radius:10px;
-      border:1px solid #d1d5db; max-width:100%;
-      background:#fff;
-    }
+    select{padding:6px 10px;border-radius:10px;border:1px solid #d1d5db;max-width:100%;background:#fff;}
 
-    .mc label{
-      display:block; border:1px solid #e5e7eb; border-radius:12px;
-      padding:10px; margin:8px 0; cursor:pointer;
-    }
+    .mc label{display:block;border:1px solid #e5e7eb;border-radius:12px;padding:10px;margin:8px 0;cursor:pointer}
     .mc input{margin-right:8px}
 
-    .wordbank{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
-    .chip{
-      background:#f3f4f6; border:1px solid #e5e7eb;
-      padding:6px 10px; border-radius:999px; font-size:.92rem;
-    }
+    .wordbank{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+    .chip{background:#f3f4f6;border:1px solid #e5e7eb;padding:6px 10px;border-radius:999px;font-size:.92rem}
 
-    .footer{
-      display:flex; gap:10px; flex-wrap:wrap;
-      justify-content:flex-end; margin-top:14px;
-      align-items:center;
-    }
+    .footer{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px;align-items:center;}
+    button{border:0;background:#111827;color:#fff;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:800}
+    button.secondary{background:#e5e7eb;color:#111827}
+    button.done{background:#16a34a}
+    button.done:disabled{opacity:.6;cursor:not-allowed}
 
-    button{
-      border:0; background:#111827; color:#fff;
-      padding:10px 12px; border-radius:10px;
-      cursor:pointer; font-weight:800;
-    }
-    button.secondary{background:#e5e7eb; color:#111827}
-    button.done{
-      background:#16a34a;
-    }
-    button.done[disabled]{
-      opacity:.55; cursor:not-allowed;
-    }
-
-    .ok{color:#065f46; font-weight:900}
-    .bad{color:#991b1b; font-weight:900}
-    .debug{margin:8px 0 0; color:#6b7280; font-size:.85rem; text-align:center}
-
-    .banner{
-      border:1px dashed #d1d5db;
-      padding:10px 12px;
-      border-radius:12px;
-      background:#fafafa;
-      color:#374151;
-      font-size:.92rem;
-      margin-bottom:10px;
-    }
-    .hidden{display:none !important;}
+    .ok{color:#065f46;font-weight:900}
+    .bad{color:#991b1b;font-weight:900}
+    .debug{margin:8px 0 0;color:#6b7280;font-size:.85rem;text-align:center}
+    .hidden{display:none !important}
+    .banner{border:1px dashed #d1d5db;padding:10px 12px;border-radius:12px;background:#fafafa;color:#374151;font-size:.92rem;margin-bottom:10px}
   </style>
 </head>
 <body>
@@ -111,8 +54,8 @@
     <p class="sub" id="subtitle"></p>
 
     <div class="banner hidden" id="embedHint">
-      Hinweis: Diese Seite muss <b>in LearningView eingebettet</b> laufen, damit „Fertig“ die Aufgabe als erledigt markieren kann.
-      Wenn du diese Seite in einem neuen Tab geöffnet hast, kann LearningView die Rückmeldung nicht empfangen.
+      Hinweis: Wenn du diese Seite in einem <b>neuen Tab</b> geöffnet hast, kann LearningView die Rückmeldung nicht empfangen.
+      Diese Aufgabe muss <b>im LearningView-Fenster eingebettet</b> laufen.
     </div>
 
     <div class="pillbar">
@@ -154,7 +97,7 @@
         <button class="secondary" id="resetBtn">Zurücksetzen</button>
         <button id="checkBtn">Prüfen</button>
 
-        <!-- erscheint erst wenn alles korrekt ist -->
+        <!-- erscheint erst wenn alles korrekt -->
         <button class="done hidden" id="doneBtn">Fertig (LearningView)</button>
       </div>
       <div class="debug" id="debug"></div>
@@ -163,9 +106,8 @@
 
 <script>
 const CONFIG = {
-  sectionId: 1,
   title: "Abschnitt 1: Was ist 3D-Druck?",
-  subtitle: "Wenn alles richtig ist, erscheint „Fertig“. Damit wird die Aufgabe in LearningView als erledigt markiert.",
+  subtitle: "Wenn alles richtig ist, erscheint „Fertig“. Damit wird an LearningView gemeldet: erledigt.",
   match3: {
     title: "Begriffe, Bedeutungen und Erklärungen",
     terms: ["3D","Additive Fertigung","3D-Modell","3D-Drucker"],
@@ -207,13 +149,9 @@ const CONFIG = {
 };
 
 const $ = (id)=>document.getElementById(id);
-const state = {
-  answers:{ meaning:[], explain:[], mc:null, cloze:[] },
-  solved:false,
-  sent:false
-};
+const state = { meaning:[], explain:[], mc:null, cloze:[], solved:false, sent:false };
 
-function buildSelect(options, placeholder){
+function buildSelectIndex(options, placeholder){
   const sel = document.createElement("select");
   sel.innerHTML = `<option value="">${placeholder}</option>` +
     options.map((o,i)=>`<option value="${i}">${o}</option>`).join("");
@@ -222,23 +160,23 @@ function buildSelect(options, placeholder){
 
 function checkAll(){
   const okMatchMeaning = CONFIG.match3.solutionMeaningIndex
-    .every((sol,i)=>String(state.answers.meaning[i])===String(sol));
+    .every((sol,i)=>String(state.meaning[i])===String(sol));
   const okMatchExplain = CONFIG.match3.solutionExplainIndex
-    .every((sol,i)=>String(state.answers.explain[i])===String(sol));
+    .every((sol,i)=>String(state.explain[i])===String(sol));
   const okMatch = okMatchMeaning && okMatchExplain;
 
-  const okMC = state.answers.mc === CONFIG.mc.correctIndex;
+  const okMC = state.mc === CONFIG.mc.correctIndex;
 
   const okCloze = CONFIG.cloze.solution
-    .every((sol,i)=>String(state.answers.cloze[i])===String(sol));
+    .every((sol,i)=>String(state.cloze[i])===String(sol));
 
-  return {okMatch, okMC, okCloze, solved: okMatch && okMC && okCloze};
+  return { okMatch, okMC, okCloze, solved: okMatch && okMC && okCloze };
 }
 
-function setDoneVisible(isSolved){
-  const doneBtn = $("doneBtn");
-  if (isSolved) doneBtn.classList.remove("hidden");
-  else doneBtn.classList.add("hidden");
+function setDoneVisible(show){
+  const b = $("doneBtn");
+  if (show) b.classList.remove("hidden");
+  else b.classList.add("hidden");
 }
 
 function updateStatus(){
@@ -257,26 +195,37 @@ function updateStatus(){
   setDoneVisible(r.solved);
 }
 
-function sendAppSolvedToLearningView(){
-  // LearningView-Trick: Button sendet exakt diese Message (wie LearningApps-Integration).
-  // Quelle: LearningView-Forum (Interaktiv extern + Anbieter LearningApps + eigene URL).
-  // https://learningview.org/forum/index.php?topic=278.0
-  try{
-    window.parent.postMessage("AppSolved","*");
-    $("debug").textContent = "Debug: AppSolved an window.parent gesendet.";
-    state.sent = true;
-    $("doneBtn").disabled = true;
-    $("doneBtn").textContent = "Gesendet ✓";
-  }catch(e){
-    $("debug").textContent = "Debug: Senden fehlgeschlagen (postMessage).";
-  }
+function sendAppSolved(){
+  // Genau der „Trick“ aus dem LearningView-Forum:
+  // <button onclick="window.parent.postMessage('AppSolved','*')">Fertig</button>
+  // :contentReference[oaicite:2]{index=2}
+
+  if (state.sent) return;
+
+  // 3x senden (robuster)
+  const fire = () => {
+    try { window.parent.postMessage("AppSolved","*"); } catch(e){}
+  };
+
+  fire();
+  setTimeout(fire, 150);
+  setTimeout(fire, 450);
+
+  state.sent = true;
+
+  const b = $("doneBtn");
+  b.disabled = true;
+  b.textContent = "Gesendet ✓";
+
+  $("debug").textContent =
+    "Debug: AppSolved wurde gesendet. (Wenn LearningView es empfängt, wird die Aufgabe im Arbeitsstand als erledigt markiert.)";
 }
 
 function render(){
   $("title").textContent = CONFIG.title;
   $("subtitle").textContent = CONFIG.subtitle;
 
-  // Hinweis zeigen, wenn NICHT eingebettet
+  // Hinweis, falls nicht eingebettet
   const embedded = (window.parent && window.parent !== window);
   if (!embedded) $("embedHint").classList.remove("hidden");
 
@@ -293,13 +242,13 @@ function render(){
     tdTerm.textContent = term;
 
     const tdMeaning = document.createElement("td");
-    const selM = buildSelect(CONFIG.match3.meanings, "– Bedeutung –");
-    selM.onchange = ()=>{ state.answers.meaning[i]=selM.value; updateStatus(); };
+    const selM = buildSelectIndex(CONFIG.match3.meanings, "– Bedeutung –");
+    selM.onchange = ()=>{ state.meaning[i]=selM.value; updateStatus(); };
     tdMeaning.appendChild(selM);
 
     const tdExplain = document.createElement("td");
-    const selE = buildSelect(CONFIG.match3.explanations, "– Erklärung –");
-    selE.onchange = ()=>{ state.answers.explain[i]=selE.value; updateStatus(); };
+    const selE = buildSelectIndex(CONFIG.match3.explanations, "– Erklärung –");
+    selE.onchange = ()=>{ state.explain[i]=selE.value; updateStatus(); };
     tdExplain.appendChild(selE);
 
     tr.appendChild(tdTerm);
@@ -311,12 +260,15 @@ function render(){
   // MC
   $("mcTitle").textContent = CONFIG.mc.title;
   $("mcQuestion").textContent = CONFIG.mc.question;
-  const mw = $("mcWrap"); mw.innerHTML = "";
+  const mw = $("mcWrap");
+  mw.innerHTML = "";
   CONFIG.mc.options.forEach((opt,idx)=>{
     const lab = document.createElement("label");
     const inp = document.createElement("input");
-    inp.type="radio"; inp.name="mc"; inp.value=idx;
-    inp.onchange = ()=>{ state.answers.mc = idx; updateStatus(); };
+    inp.type = "radio";
+    inp.name = "mc";
+    inp.value = idx;
+    inp.onchange = ()=>{ state.mc = idx; updateStatus(); };
     lab.appendChild(inp);
     lab.appendChild(document.createTextNode(opt));
     mw.appendChild(lab);
@@ -324,21 +276,25 @@ function render(){
 
   // Cloze
   $("clozeTitle").textContent = CONFIG.cloze.title;
-  const p = $("clozeText"); p.innerHTML = "";
+  const p = $("clozeText");
+  p.innerHTML = "";
   for(let i=0;i<CONFIG.cloze.solution.length;i++){
     p.appendChild(document.createTextNode(CONFIG.cloze.textParts[i]));
+
     const sel = document.createElement("select");
     sel.innerHTML = `<option value="">– Wort –</option>` +
       CONFIG.cloze.wordbank.map(w=>`<option value="${w}">${w}</option>`).join("");
-    sel.onchange = ()=>{ state.answers.cloze[i]=sel.value; updateStatus(); };
+    sel.onchange = ()=>{ state.cloze[i]=sel.value; updateStatus(); };
     p.appendChild(sel);
   }
   p.appendChild(document.createTextNode(CONFIG.cloze.textParts[CONFIG.cloze.solution.length]));
 
-  const wb = $("wordbank"); wb.innerHTML = "";
+  const wb = $("wordbank");
+  wb.innerHTML = "";
   CONFIG.cloze.wordbank.forEach(w=>{
     const c = document.createElement("span");
-    c.className="chip"; c.textContent=w;
+    c.className = "chip";
+    c.textContent = w;
     wb.appendChild(c);
   });
 
@@ -346,14 +302,12 @@ function render(){
   $("checkBtn").onclick = ()=> updateStatus();
   $("resetBtn").onclick = ()=> location.reload();
   $("doneBtn").onclick = ()=>{
-    // Sicherheitscheck: nur senden, wenn wirklich korrekt
     const r = checkAll();
     if (!r.solved) {
       $("debug").textContent = "Debug: Noch nicht korrekt – AppSolved wird nicht gesendet.";
       return;
     }
-    if (state.sent) return;
-    sendAppSolvedToLearningView();
+    sendAppSolved();
   };
 
   updateStatus();
