@@ -5,41 +5,115 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>3D-Druck – Abschnitt 1</title>
   <style>
-    :root{font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f3f4f6;}
-    body{margin:0;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:14px;}
-    .app{background:#fff;border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.1);padding:18px;max-width:980px;width:100%;box-sizing:border-box;}
-    h1{margin:0 0 6px;text-align:center;font-size:1.35rem;}
-    .sub{margin:0 0 14px;text-align:center;color:#6b7280;font-size:.95rem}
-    .pillbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;justify-content:space-between;margin:8px 0 14px;}
-    .pill{background:#eef2ff;border:1px solid #c7d2fe;padding:6px 10px;border-radius:999px;font-size:.92rem}
-    .card{border:1px solid #e5e7eb;border-radius:14px;padding:14px;margin:10px 0;background:#fff;}
-    .card h2{margin:0 0 8px;font-size:1.05rem}
-    .small{font-size:.94rem;color:#374151;line-height:1.35}
-    .hint{color:#6b7280;font-size:.92rem;margin-top:8px}
-    button{border:0;background:#111827;color:#fff;padding:10px 12px;border-radius:10px;cursor:pointer;font-weight:700}
-    button.secondary{background:#e5e7eb;color:#111827}
-    .ok{color:#065f46;font-weight:800}
-    .bad{color:#991b1b;font-weight:800}
-    .mc label{display:block;border:1px solid #e5e7eb;border-radius:12px;padding:10px;margin:8px 0;cursor:pointer}
-    .mc input{margin-right:8px}
-    select{padding:6px 10px;border-radius:10px;border:1px solid #d1d5db;max-width:100%}
-    table{width:100%;border-collapse:separate;border-spacing:0 10px}
-    th,td{padding:8px 10px;vertical-align:middle}
-    th{font-size:.9rem;color:#6b7280;text-align:left}
+    :root{
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:#f3f4f6;
+    }
+    body{
+      margin:0; min-height:100vh;
+      display:flex; align-items:center; justify-content:center;
+      padding:14px;
+    }
+    .app{
+      background:#fff; border-radius:16px;
+      box-shadow:0 10px 30px rgba(0,0,0,.1);
+      padding:18px; max-width:980px; width:100%;
+      box-sizing:border-box;
+    }
+    h1{margin:0 0 6px; text-align:center; font-size:1.35rem;}
+    .sub{margin:0 0 14px; text-align:center; color:#6b7280; font-size:.95rem;}
+    .pillbar{
+      display:flex; gap:10px; flex-wrap:wrap;
+      align-items:center; justify-content:space-between;
+      margin:8px 0 14px;
+    }
+    .pill{
+      background:#eef2ff; border:1px solid #c7d2fe;
+      padding:6px 10px; border-radius:999px; font-size:.92rem;
+    }
+    .card{
+      border:1px solid #e5e7eb; border-radius:14px;
+      padding:14px; margin:10px 0; background:#fff;
+    }
+    .card h2{margin:0 0 8px; font-size:1.05rem}
+    .small{font-size:.94rem; color:#374151; line-height:1.35}
+    .hint{color:#6b7280; font-size:.92rem; margin-top:8px}
+
+    table{width:100%; border-collapse:separate; border-spacing:0 10px}
+    th,td{padding:8px 10px; vertical-align:middle}
+    th{font-size:.9rem; color:#6b7280; text-align:left}
     tr.row td{border:1px solid #e5e7eb}
-    tr.row td:first-child{border-right:none;border-radius:10px 0 0 10px;background:#fafafa;font-weight:800;width:22%}
-    tr.row td:nth-child(2){border-left:none;border-right:none;width:28%}
-    tr.row td:last-child{border-left:none;border-radius:0 10px 10px 0;width:50%}
-    .wordbank{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-    .chip{background:#f3f4f6;border:1px solid #e5e7eb;padding:6px 10px;border-radius:999px;font-size:.92rem}
-    .footer{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
-    .debug{margin:8px 0 0;color:#6b7280;font-size:.85rem;text-align:center}
+    tr.row td:first-child{
+      border-right:none; border-radius:10px 0 0 10px;
+      background:#fafafa; font-weight:800; width:22%;
+    }
+    tr.row td:nth-child(2){border-left:none; border-right:none; width:28%}
+    tr.row td:last-child{
+      border-left:none; border-radius:0 10px 10px 0; width:50%;
+    }
+
+    select{
+      padding:6px 10px; border-radius:10px;
+      border:1px solid #d1d5db; max-width:100%;
+      background:#fff;
+    }
+
+    .mc label{
+      display:block; border:1px solid #e5e7eb; border-radius:12px;
+      padding:10px; margin:8px 0; cursor:pointer;
+    }
+    .mc input{margin-right:8px}
+
+    .wordbank{display:flex; gap:8px; flex-wrap:wrap; margin-top:10px}
+    .chip{
+      background:#f3f4f6; border:1px solid #e5e7eb;
+      padding:6px 10px; border-radius:999px; font-size:.92rem;
+    }
+
+    .footer{
+      display:flex; gap:10px; flex-wrap:wrap;
+      justify-content:flex-end; margin-top:14px;
+      align-items:center;
+    }
+
+    button{
+      border:0; background:#111827; color:#fff;
+      padding:10px 12px; border-radius:10px;
+      cursor:pointer; font-weight:800;
+    }
+    button.secondary{background:#e5e7eb; color:#111827}
+    button.done{
+      background:#16a34a;
+    }
+    button.done[disabled]{
+      opacity:.55; cursor:not-allowed;
+    }
+
+    .ok{color:#065f46; font-weight:900}
+    .bad{color:#991b1b; font-weight:900}
+    .debug{margin:8px 0 0; color:#6b7280; font-size:.85rem; text-align:center}
+
+    .banner{
+      border:1px dashed #d1d5db;
+      padding:10px 12px;
+      border-radius:12px;
+      background:#fafafa;
+      color:#374151;
+      font-size:.92rem;
+      margin-bottom:10px;
+    }
+    .hidden{display:none !important;}
   </style>
 </head>
 <body>
   <div class="app">
     <h1 id="title"></h1>
     <p class="sub" id="subtitle"></p>
+
+    <div class="banner hidden" id="embedHint">
+      Hinweis: Diese Seite muss <b>in LearningView eingebettet</b> laufen, damit „Fertig“ die Aufgabe als erledigt markieren kann.
+      Wenn du diese Seite in einem neuen Tab geöffnet hast, kann LearningView die Rückmeldung nicht empfangen.
+    </div>
 
     <div class="pillbar">
       <div class="pill" id="progressPill"></div>
@@ -78,7 +152,10 @@
       <div class="small" id="msg"></div>
       <div class="footer">
         <button class="secondary" id="resetBtn">Zurücksetzen</button>
-        <button id="checkBtn">Abschnitt prüfen</button>
+        <button id="checkBtn">Prüfen</button>
+
+        <!-- erscheint erst wenn alles korrekt ist -->
+        <button class="done hidden" id="doneBtn">Fertig (LearningView)</button>
       </div>
       <div class="debug" id="debug"></div>
     </div>
@@ -88,16 +165,11 @@
 const CONFIG = {
   sectionId: 1,
   title: "Abschnitt 1: Was ist 3D-Druck?",
-  subtitle: "Begriff → Bedeutung → Erklärung | MC | Lückentext | Bei „gelöst“ wird AppSolved gesendet.",
+  subtitle: "Wenn alles richtig ist, erscheint „Fertig“. Damit wird die Aufgabe in LearningView als erledigt markiert.",
   match3: {
     title: "Begriffe, Bedeutungen und Erklärungen",
     terms: ["3D","Additive Fertigung","3D-Modell","3D-Drucker"],
-    meanings: [
-      "dreidimensional",
-      "Herstellungsart",
-      "digitaler Bauplan",
-      "Druckmaschine"
-    ],
+    meanings: ["dreidimensional","Herstellungsart","digitaler Bauplan","Druckmaschine"],
     explanations: [
       "Gegenstände mit Breite, Länge und Höhe",
       "Material wird schichtweise hinzugefügt",
@@ -135,24 +207,17 @@ const CONFIG = {
 };
 
 const $ = (id)=>document.getElementById(id);
-const state = { answers:{ meaning:[], explain:[], mc:null, cloze:[] } };
+const state = {
+  answers:{ meaning:[], explain:[], mc:null, cloze:[] },
+  solved:false,
+  sent:false
+};
 
-// ✅ robustes AppSolved (String + Objekt, parent + top), genau einmal
-let _appSolvedSent = false;
-function sendSolved(){
-  if (_appSolvedSent) return;
-  _appSolvedSent = true;
-
-  const payloadObj = { type: "AppSolved" };
-  const payloadStr = "AppSolved";
-
-  try { window.parent?.postMessage(payloadStr, "*"); } catch(e){}
-  try { window.parent?.postMessage(payloadObj, "*"); } catch(e){}
-  try { window.top?.postMessage(payloadStr, "*"); } catch(e){}
-  try { window.top?.postMessage(payloadObj, "*"); } catch(e){}
-
-  const dbg = $("debug");
-  if (dbg) dbg.textContent = "Debug: AppSolved an parent+top gesendet (String+Objekt).";
+function buildSelect(options, placeholder){
+  const sel = document.createElement("select");
+  sel.innerHTML = `<option value="">${placeholder}</option>` +
+    options.map((o,i)=>`<option value="${i}">${o}</option>`).join("");
+  return sel;
 }
 
 function checkAll(){
@@ -163,34 +228,57 @@ function checkAll(){
   const okMatch = okMatchMeaning && okMatchExplain;
 
   const okMC = state.answers.mc === CONFIG.mc.correctIndex;
-  const okCloze = CONFIG.cloze.solution.every((sol,i)=>String(state.answers.cloze[i])===String(sol));
+
+  const okCloze = CONFIG.cloze.solution
+    .every((sol,i)=>String(state.answers.cloze[i])===String(sol));
 
   return {okMatch, okMC, okCloze, solved: okMatch && okMC && okCloze};
 }
 
-function updateStatus(){
-  const r = checkAll();
-  $("progressPill").textContent = `Status: ${r.solved ? "gelöst" : "offen"}`;
-  $("detailPill").textContent = `Zuordnung: ${r.okMatch?"✓":"✗"}  MC: ${r.okMC?"✓":"✗"}  Lücken: ${r.okCloze?"✓":"✗"}`;
-  $("msg").innerHTML = r.solved
-    ? `<span class="ok">Gelöst ✅</span> – AppSolved wird gesendet.`
-    : `<span class="bad">Noch nicht gelöst ❌</span> – bitte alles korrekt lösen.`;
-
-  // ✅ automatisch senden, sobald gelöst
-  if (r.solved) sendSolved();
-  return r.solved;
+function setDoneVisible(isSolved){
+  const doneBtn = $("doneBtn");
+  if (isSolved) doneBtn.classList.remove("hidden");
+  else doneBtn.classList.add("hidden");
 }
 
-function buildSelect(options, placeholder){
-  const sel = document.createElement("select");
-  sel.innerHTML = `<option value="">${placeholder}</option>` +
-    options.map((o,i)=>`<option value="${i}">${o}</option>`).join("");
-  return sel;
+function updateStatus(){
+  const r = checkAll();
+  state.solved = r.solved;
+
+  $("progressPill").textContent = `Status: ${r.solved ? "bereit" : "offen"}`;
+  $("detailPill").textContent = `Zuordnung: ${r.okMatch?"✓":"✗"}  MC: ${r.okMC?"✓":"✗"}  Lücken: ${r.okCloze?"✓":"✗"}`;
+
+  if (r.solved) {
+    $("msg").innerHTML = `<span class="ok">Alles korrekt ✅</span> – klicke jetzt auf <b>Fertig</b>, um LearningView zu melden.`;
+  } else {
+    $("msg").innerHTML = `<span class="bad">Noch nicht korrekt ❌</span> – löse zuerst alle Teile richtig.`;
+  }
+
+  setDoneVisible(r.solved);
+}
+
+function sendAppSolvedToLearningView(){
+  // LearningView-Trick: Button sendet exakt diese Message (wie LearningApps-Integration).
+  // Quelle: LearningView-Forum (Interaktiv extern + Anbieter LearningApps + eigene URL).
+  // https://learningview.org/forum/index.php?topic=278.0
+  try{
+    window.parent.postMessage("AppSolved","*");
+    $("debug").textContent = "Debug: AppSolved an window.parent gesendet.";
+    state.sent = true;
+    $("doneBtn").disabled = true;
+    $("doneBtn").textContent = "Gesendet ✓";
+  }catch(e){
+    $("debug").textContent = "Debug: Senden fehlgeschlagen (postMessage).";
+  }
 }
 
 function render(){
   $("title").textContent = CONFIG.title;
   $("subtitle").textContent = CONFIG.subtitle;
+
+  // Hinweis zeigen, wenn NICHT eingebettet
+  const embedded = (window.parent && window.parent !== window);
+  if (!embedded) $("embedHint").classList.remove("hidden");
 
   // Match3
   $("matchTitle").textContent = CONFIG.match3.title;
@@ -254,12 +342,23 @@ function render(){
     wb.appendChild(c);
   });
 
-  // Buttons (Check kann bleiben; Status prüft + sendet automatisch)
+  // Buttons
   $("checkBtn").onclick = ()=> updateStatus();
-  $("resetBtn").onclick = ()=>location.reload();
+  $("resetBtn").onclick = ()=> location.reload();
+  $("doneBtn").onclick = ()=>{
+    // Sicherheitscheck: nur senden, wenn wirklich korrekt
+    const r = checkAll();
+    if (!r.solved) {
+      $("debug").textContent = "Debug: Noch nicht korrekt – AppSolved wird nicht gesendet.";
+      return;
+    }
+    if (state.sent) return;
+    sendAppSolvedToLearningView();
+  };
 
   updateStatus();
 }
+
 render();
 </script>
 </body>
