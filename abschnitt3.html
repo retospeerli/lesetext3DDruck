@@ -22,12 +22,14 @@
     .bad{color:#991b1b;font-weight:800}
     .mc label{display:block;border:1px solid #e5e7eb;border-radius:12px;padding:10px;margin:8px 0;cursor:pointer}
     .mc input{margin-right:8px}
-    select{padding:6px 10px;border-radius:10px;border:1px solid #d1d5db}
-    table{width:100%;border-collapse:separate;border-spacing:0 8px}
-    td{padding:8px 10px;vertical-align:middle}
-    .pair td{border:1px solid #e5e7eb}
-    .pair td:first-child{border-right:none;border-radius:10px 0 0 10px;background:#fafafa;font-weight:800}
-    .pair td:last-child{border-left:none;border-radius:0 10px 10px 0}
+    select{padding:6px 10px;border-radius:10px;border:1px solid #d1d5db;max-width:100%}
+    table{width:100%;border-collapse:separate;border-spacing:0 10px}
+    th,td{padding:8px 10px;vertical-align:middle}
+    th{font-size:.9rem;color:#6b7280;text-align:left}
+    tr.row td{border:1px solid #e5e7eb}
+    tr.row td:first-child{border-right:none;border-radius:10px 0 0 10px;background:#fafafa;font-weight:800;width:22%}
+    tr.row td:nth-child(2){border-left:none;border-right:none;width:28%}
+    tr.row td:last-child{border-left:none;border-radius:0 10px 10px 0;width:50%}
     .wordbank{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
     .chip{background:#f3f4f6;border:1px solid #e5e7eb;padding:6px 10px;border-radius:999px;font-size:.92rem}
     .footer{display:flex;gap:10px;flex-wrap:wrap;justify-content:flex-end;margin-top:14px}
@@ -46,8 +48,17 @@
 
     <div class="card">
       <h2 id="matchTitle"></h2>
-      <table id="matchTable"></table>
-      <div class="hint">Zuordnung: Abkürzung → ausgeschrieben → kurze Erklärung.</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Begriff</th>
+            <th>Bedeutung (kurz)</th>
+            <th>Erklärung (genau)</th>
+          </tr>
+        </thead>
+        <tbody id="matchTable"></tbody>
+      </table>
+      <div class="hint">Wähle zu jedem Begriff die passende Bedeutung und die passende Erklärung. Jede Option passt genau einmal.</div>
     </div>
 
     <div class="card">
@@ -77,17 +88,24 @@
 const CONFIG = {
   sectionId: 3,
   title: "Abschnitt 3: Verfahren und Materialien",
-  subtitle: "Zuordnung – MC – Lückentext. Bei „gelöst“ wird AppSolved gesendet.",
-  match: {
-    title: "Abkürzung – Bedeutung – Kurz-Erklärung",
-    left: ["FDM","SLA","SLS","PLA"],
-    right: [
-      "FDM = Fused Deposition Modeling – Filament wird geschmolzen und abgelegt",
-      "SLA = Stereolithografie – Flüssiges Harz wird mit Licht gehärtet",
-      "SLS = Selective Laser Sintering – Pulver wird mit Laser verschmolzen",
-      "PLA = Polylactid – pflanzlicher Kunststoff, gut für Schule"
+  subtitle: "Begriff → Bedeutung → Erklärung | MC | Lückentext | Bei „gelöst“ wird AppSolved gesendet.",
+  match3: {
+    title: "Begriffe, Bedeutungen und Erklärungen",
+    terms: ["FDM","SLA","SLS","PLA"],
+    meanings: [
+      "Filamentverfahren",
+      "Harzverfahren",
+      "Pulververfahren",
+      "Kunststoffmaterial"
     ],
-    solution: [0,1,2,3]
+    explanations: [
+      "Filament wird erhitzt und durch eine Düse abgelegt",
+      "Flüssiges Harz wird mit Licht schichtweise gehärtet",
+      "Pulver wird mit einem Laser zu festen Schichten verschmolzen",
+      "Pflanzlicher Kunststoff, gut geeignet für den Schul-Druck"
+    ],
+    solutionMeaningIndex: [0,1,2,3],
+    solutionExplainIndex:  [0,1,2,3]
   },
   mc: {
     title: "Multiple Choice",
@@ -117,12 +135,19 @@ const CONFIG = {
 };
 
 const $ = (id)=>document.getElementById(id);
-const state = { answers:{ match:[], mc:null, cloze:[] }, solved:false };
+const state = { answers:{ meaning:[], explain:[], mc:null, cloze:[] }, solved:false };
 
 function checkAll(){
-  const okMatch = CONFIG.match.solution.every((sol,i)=>String(state.answers.match[i])===String(sol));
+  const okMatchMeaning = CONFIG.match3.solutionMeaningIndex
+    .every((sol,i)=>String(state.answers.meaning[i])===String(sol));
+  const okMatchExplain = CONFIG.match3.solutionExplainIndex
+    .every((sol,i)=>String(state.answers.explain[i])===String(sol));
+  const okMatch = okMatchMeaning && okMatchExplain;
+
   const okMC = state.answers.mc === CONFIG.mc.correctIndex;
+
   const okCloze = CONFIG.cloze.solution.every((sol,i)=>String(state.answers.cloze[i])===String(sol));
+
   return {okMatch, okMC, okCloze, solved: okMatch && okMC && okCloze};
 }
 
@@ -145,25 +170,43 @@ function sendSolved(){
   }
 }
 
+function buildSelect(options, placeholder){
+  const sel = document.createElement("select");
+  sel.innerHTML = `<option value="">${placeholder}</option>` +
+    options.map((o,i)=>`<option value="${i}">${o}</option>`).join("");
+  return sel;
+}
+
 function render(){
   $("title").textContent = CONFIG.title;
   $("subtitle").textContent = CONFIG.subtitle;
 
-  // Match
-  $("matchTitle").textContent = CONFIG.match.title;
-  const mt = $("matchTable");
-  mt.innerHTML = "";
-  CONFIG.match.left.forEach((l,i)=>{
+  // Match3
+  $("matchTitle").textContent = CONFIG.match3.title;
+  const tbody = $("matchTable");
+  tbody.innerHTML = "";
+
+  CONFIG.match3.terms.forEach((term,i)=>{
     const tr = document.createElement("tr");
-    tr.className = "pair";
-    const td1 = document.createElement("td"); td1.textContent = l;
-    const td2 = document.createElement("td");
-    const sel = document.createElement("select");
-    sel.innerHTML = `<option value="">– wählen –</option>` + CONFIG.match.right.map((r,ri)=>`<option value="${ri}">${r}</option>`).join("");
-    sel.onchange = ()=>{ state.answers.match[i]=sel.value; updateStatus(); };
-    td2.appendChild(sel);
-    tr.appendChild(td1); tr.appendChild(td2);
-    mt.appendChild(tr);
+    tr.className = "row";
+
+    const tdTerm = document.createElement("td");
+    tdTerm.textContent = term;
+
+    const tdMeaning = document.createElement("td");
+    const selM = buildSelect(CONFIG.match3.meanings, "– Bedeutung –");
+    selM.onchange = ()=>{ state.answers.meaning[i]=selM.value; updateStatus(); };
+    tdMeaning.appendChild(selM);
+
+    const tdExplain = document.createElement("td");
+    const selE = buildSelect(CONFIG.match3.explanations, "– Erklärung –");
+    selE.onchange = ()=>{ state.answers.explain[i]=selE.value; updateStatus(); };
+    tdExplain.appendChild(selE);
+
+    tr.appendChild(tdTerm);
+    tr.appendChild(tdMeaning);
+    tr.appendChild(tdExplain);
+    tbody.appendChild(tr);
   });
 
   // MC
@@ -186,7 +229,8 @@ function render(){
   for(let i=0;i<CONFIG.cloze.solution.length;i++){
     p.appendChild(document.createTextNode(CONFIG.cloze.textParts[i]));
     const sel = document.createElement("select");
-    sel.innerHTML = `<option value="">– Wort –</option>` + CONFIG.cloze.wordbank.map(w=>`<option value="${w}">${w}</option>`).join("");
+    sel.innerHTML = `<option value="">– Wort –</option>` +
+      CONFIG.cloze.wordbank.map(w=>`<option value="${w}">${w}</option>`).join("");
     sel.onchange = ()=>{ state.answers.cloze[i]=sel.value; updateStatus(); };
     p.appendChild(sel);
   }
