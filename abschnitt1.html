@@ -120,7 +120,6 @@ const CONFIG = {
   },
   cloze: {
     title: "Lückentext",
-    // 6 Lücken -> 7 Textteile
     textParts: [
       "Beim 3D-Druck entsteht ein Objekt nicht durch das ",
       ", sondern durch das ",
@@ -136,7 +135,25 @@ const CONFIG = {
 };
 
 const $ = (id)=>document.getElementById(id);
-const state = { answers:{ meaning:[], explain:[], mc:null, cloze:[] }, solved:false };
+const state = { answers:{ meaning:[], explain:[], mc:null, cloze:[] } };
+
+// ✅ robustes AppSolved (String + Objekt, parent + top), genau einmal
+let _appSolvedSent = false;
+function sendSolved(){
+  if (_appSolvedSent) return;
+  _appSolvedSent = true;
+
+  const payloadObj = { type: "AppSolved" };
+  const payloadStr = "AppSolved";
+
+  try { window.parent?.postMessage(payloadStr, "*"); } catch(e){}
+  try { window.parent?.postMessage(payloadObj, "*"); } catch(e){}
+  try { window.top?.postMessage(payloadStr, "*"); } catch(e){}
+  try { window.top?.postMessage(payloadObj, "*"); } catch(e){}
+
+  const dbg = $("debug");
+  if (dbg) dbg.textContent = "Debug: AppSolved an parent+top gesendet (String+Objekt).";
+}
 
 function checkAll(){
   const okMatchMeaning = CONFIG.match3.solutionMeaningIndex
@@ -146,7 +163,6 @@ function checkAll(){
   const okMatch = okMatchMeaning && okMatchExplain;
 
   const okMC = state.answers.mc === CONFIG.mc.correctIndex;
-
   const okCloze = CONFIG.cloze.solution.every((sol,i)=>String(state.answers.cloze[i])===String(sol));
 
   return {okMatch, okMC, okCloze, solved: okMatch && okMC && okCloze};
@@ -159,16 +175,10 @@ function updateStatus(){
   $("msg").innerHTML = r.solved
     ? `<span class="ok">Gelöst ✅</span> – AppSolved wird gesendet.`
     : `<span class="bad">Noch nicht gelöst ❌</span> – bitte alles korrekt lösen.`;
-  return r.solved;
-}
 
-function sendSolved(){
-  try{
-    window.parent?.postMessage("AppSolved","*");
-    $("debug").textContent = "Debug: AppSolved gesendet (postMessage).";
-  }catch(e){
-    $("debug").textContent = "Debug: postMessage fehlgeschlagen.";
-  }
+  // ✅ automatisch senden, sobald gelöst
+  if (r.solved) sendSolved();
+  return r.solved;
 }
 
 function buildSelect(options, placeholder){
@@ -182,7 +192,7 @@ function render(){
   $("title").textContent = CONFIG.title;
   $("subtitle").textContent = CONFIG.subtitle;
 
-  // Match3 (Begriff -> Bedeutung + Erklärung)
+  // Match3
   $("matchTitle").textContent = CONFIG.match3.title;
   const tbody = $("matchTable");
   tbody.innerHTML = "";
@@ -244,10 +254,8 @@ function render(){
     wb.appendChild(c);
   });
 
-  $("checkBtn").onclick = ()=>{
-    const solved = updateStatus();
-    if(solved) sendSolved();
-  };
+  // Buttons (Check kann bleiben; Status prüft + sendet automatisch)
+  $("checkBtn").onclick = ()=> updateStatus();
   $("resetBtn").onclick = ()=>location.reload();
 
   updateStatus();
